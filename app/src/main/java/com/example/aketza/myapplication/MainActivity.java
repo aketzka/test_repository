@@ -11,6 +11,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mQuestionText;
     private Button mTrueButton;
     private Button mFalseButton;
+    private Button mPrevButton;
     private Button mNextButton;
     private Question[] mQuestionBank = {
             new Question(R.string.question_africa, false),
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
             new Question(R.string.question_americas, true),
             new Question(R.string.question_mideast, false),
             new Question(R.string.question_oceans, true)};
-    int mCurrentIndex = 0;
+    private int mCurrentIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         mQuestionText = (TextView)findViewById(R.id.question_text);
         mTrueButton = (Button)findViewById(R.id.true_button);
         mFalseButton = (Button)findViewById(R.id.false_button);
+        mPrevButton = (Button)findViewById(R.id.prev_button);
         mNextButton = (Button)findViewById(R.id.next_button);
 
         refreshQuestion();
@@ -39,6 +41,14 @@ public class MainActivity extends AppCompatActivity {
         };
         mTrueButton.setOnClickListener(onClickListener);
         mFalseButton.setOnClickListener(onClickListener);
+
+        mPrevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurrentIndex = (mCurrentIndex-1+mQuestionBank.length)%mQuestionBank.length;
+                refreshQuestion();
+            }
+        });
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
