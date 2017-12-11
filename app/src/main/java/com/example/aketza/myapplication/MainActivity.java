@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,8 +12,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView mQuestionText;
     private Button mTrueButton;
     private Button mFalseButton;
-    private Button mPrevButton;
-    private Button mNextButton;
+    private ImageButton mPrevButton;
+    private ImageButton mNextButton;
     private Question[] mQuestionBank = {
             new Question(R.string.question_africa, false),
             new Question(R.string.question_asia, true),
@@ -29,18 +30,27 @@ public class MainActivity extends AppCompatActivity {
         mQuestionText = (TextView)findViewById(R.id.question_text);
         mTrueButton = (Button)findViewById(R.id.true_button);
         mFalseButton = (Button)findViewById(R.id.false_button);
-        mPrevButton = (Button)findViewById(R.id.prev_button);
-        mNextButton = (Button)findViewById(R.id.next_button);
+        mPrevButton = (ImageButton)findViewById(R.id.prev_button);
+        mNextButton = (ImageButton)findViewById(R.id.next_button);
 
         refreshQuestion();
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        View.OnClickListener onClickCheckAnswer = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkAnswer(view.getId() == mTrueButton.getId());
             }
         };
-        mTrueButton.setOnClickListener(onClickListener);
-        mFalseButton.setOnClickListener(onClickListener);
+
+        View.OnClickListener onClickNextQuestion = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurrentIndex = (mCurrentIndex+1)%mQuestionBank.length;
+                refreshQuestion();
+            }
+        };
+
+        mTrueButton.setOnClickListener(onClickCheckAnswer);
+        mFalseButton.setOnClickListener(onClickCheckAnswer);
 
         mPrevButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,13 +60,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCurrentIndex = (mCurrentIndex+1)%mQuestionBank.length;
-                refreshQuestion();
-            }
-        });
+        mNextButton.setOnClickListener(onClickNextQuestion);
+        mQuestionText.setOnClickListener(onClickNextQuestion);
+
     }
 
     private void refreshQuestion(){
